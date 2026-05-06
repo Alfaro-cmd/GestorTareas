@@ -1,26 +1,64 @@
-﻿using System;
+﻿using GestorTareas.Application;
+using GestorTareas.Application.DTOs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
-Console.WriteLine("Clasificacion:");
-Console.WriteLine("A Expedite");
-Console.WriteLine("B Standard");
-Console.WriteLine("C Expedite");
-Console.WriteLine("D Standard");
-Console.WriteLine("E FixedDate");
-Console.WriteLine("F Intangible");
-Console.WriteLine("G Standard");
-Console.WriteLine("H Intangible");
+var builder = WebApplication.CreateBuilder(args);
 
-Console.WriteLine("");
+// CLAVE (una sola vez)
+var clave = "CLAVE_SUPER_LARGA_12345678901234567890";
+var key = Encoding.UTF8.GetBytes(clave);
 
-Console.WriteLine("Backlog:");
-Console.WriteLine("A C E B D G F H");
+// JWT
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = false,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key)
+        };
+    });
 
-Console.WriteLine("");
+builder.Services.AddAuthorization();
+builder.Services.AddSingleton<AuthService>();
 
-Console.WriteLine("Primera ronda:");
-Console.WriteLine("A C E");
+var app = builder.Build();
 
-Console.WriteLine("");
+app.UseAuthentication();
+app.UseAuthorization();
 
-Console.WriteLine("Primero en completarse:");
-Console.WriteLine("A porque es urgente");
+
+// REGISTRO
+app.MapPost("/registro", (RegistroDto dto, AuthService auth) =>
+{
+    auth.Registrar(dto);
+    return Results.Ok("Usuario registrado");
+});
+
+// LOGIN
+app.MapPost("/login", (LoginDto dto, AuthService auth) =>
+{
+    var token = auth.Login(dto);
+
+    if (token == null)
+        return Results.Unauthorized();
+
+    return Results.Ok(new { token });
+});
+
+// PRIVADO
+app.MapGet("/privado", () => "OK PRIVADO")
+   .RequireAuthorization();
+
+// TEST
+app.MapGet("/", () => "API funcionando");
+
+app.Run();

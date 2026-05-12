@@ -1,15 +1,16 @@
 ﻿using GestorTareas.Application;
-using GestorTareas.Application.DTOs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// CLAVE (una sola vez)
+// 
+builder.Services.AddControllers();
+
+// CLAVE
 var clave = "CLAVE_SUPER_LARGA_12345678901234567890";
 var key = Encoding.UTF8.GetBytes(clave);
 
@@ -36,29 +37,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 
-// REGISTRO
-app.MapPost("/registro", (RegistroDto dto, AuthService auth) =>
-{
-    auth.Registrar(dto);
-    return Results.Ok("Usuario registrado");
-});
-
-// LOGIN
-app.MapPost("/login", (LoginDto dto, AuthService auth) =>
-{
-    var token = auth.Login(dto);
-
-    if (token == null)
-        return Results.Unauthorized();
-
-    return Results.Ok(new { token });
-});
-
-// PRIVADO
-app.MapGet("/privado", () => "OK PRIVADO")
-   .RequireAuthorization();
-
-// TEST
-app.MapGet("/", () => "API funcionando");
+app.MapControllers();
 
 app.Run();

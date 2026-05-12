@@ -7,4 +7,5 @@ public class TareaDto
     public DateTime FechaLimite { get; set; }
     public int Prioridad { get; set; }
     public string Estado { get; set; }
+    public bool Completada { get; internal set; }
 }

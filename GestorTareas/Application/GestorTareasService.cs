@@ -35,4 +35,16 @@ public class GestorTareasService
     {
         return _repo.ObtenerPorId(id);
     }
+    public List<Tarea> ObtenerCompletadas()
+    {
+        return _repo.ObtenerTodas()
+            .Where(t => t.Completada)
+            .Select(t => new Tarea
+            {
+                Id = t.Id,
+                Titulo = t.Titulo,
+                Completada = t.Completada
+            })
+            .ToList();
+    }
 }

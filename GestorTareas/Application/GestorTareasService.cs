@@ -5,46 +5,40 @@ namespace GestorTareas_Modulo2.Application;
 
 public class GestorTareasService
 {
-    private IRepositorioTareas _repo;
+    private readonly IRepositorioTareas _repositorio;
 
-    public GestorTareasService(IRepositorioTareas repo)
+    public GestorTareasService(IRepositorioTareas repositorio)
     {
-        _repo = repo;
+        _repositorio = repositorio;
     }
 
-    public void AgregarTarea(Tarea tarea)
+    public List<Tarea> ObtenerTodas()
     {
-        _repo.Agregar(tarea);
+        return _repositorio.ObtenerTodas();
     }
 
-    public bool EsTituloValido(string? titulo)
+    public Tarea? ObtenerPorId(int id)
     {
-        return !string.IsNullOrEmpty(titulo) && titulo.Length >= 3;
+        return _repositorio.ObtenerPorId(id);
     }
-    public void CompletarTarea(int id)
-    {
-        var tarea = _repo.ObtenerPorId(id);
 
-        if (tarea != null)
+    public Tarea Crear(string titulo, DateTime? fechaLimite, int usuarioId)
+    {
+        var tarea = new Tarea
         {
-            tarea.Completada = true;
-        }
+            Titulo = titulo,
+            FechaLimite = fechaLimite,
+            UsuarioId = usuarioId,
+            Completada = false
+        };
+
+        _repositorio.Agregar(tarea);
+
+        return tarea;
     }
 
-    public Tarea BuscarPorId(int id)
+    public void Crear(Tarea tarea)
     {
-        return _repo.ObtenerPorId(id);
-    }
-    public List<Tarea> ObtenerCompletadas()
-    {
-        return _repo.ObtenerTodas()
-            .Where(t => t.Completada)
-            .Select(t => new Tarea
-            {
-                Id = t.Id,
-                Titulo = t.Titulo,
-                Completada = t.Completada
-            })
-            .ToList();
+        throw new NotImplementedException();
     }
 }

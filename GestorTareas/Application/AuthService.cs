@@ -8,7 +8,7 @@ namespace GestorTareas.Application;
 
 public class AuthService
 {
-    // almacenamiento simple en memoria (suficiente para el ejercicio)
+   
     private static List<(string username, string password)> usuarios = new();
 
     private const string CLAVE = "CLAVE_SUPER_LARGA_12345678901234567890";

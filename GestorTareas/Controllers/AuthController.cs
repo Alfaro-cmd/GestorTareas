@@ -2,6 +2,7 @@
 using GestorTareas.Application.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using GestorTareas_Modulo2.Domain;
 
 namespace GestorTareas.Controllers
 {

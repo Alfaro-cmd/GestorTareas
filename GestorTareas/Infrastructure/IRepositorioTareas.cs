@@ -1,6 +1,6 @@
-﻿using GestorTareas_Modulo2.Domain;
+﻿using GestorTareas.Domain;
 
-namespace GestorTareas_Modulo2.Infrastructure;
+namespace GestorTareas.Infrastructure;
 
 public interface IRepositorioTareas
 {

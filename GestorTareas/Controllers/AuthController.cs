@@ -2,12 +2,11 @@
 using GestorTareas.Application.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using GestorTareas_Modulo2.Domain;
 
 namespace GestorTareas.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/auth")]
     public class AuthController : ControllerBase
     {
         private readonly AuthService _auth;

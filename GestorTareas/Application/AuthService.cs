@@ -1,4 +1,7 @@
 ﻿using GestorTareas.Application.DTOs;
+using GestorTareas.Infrastructure;
+using GestorTareas.Domain;
+using GestorTareas.Infrastructure;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -8,42 +11,49 @@ namespace GestorTareas.Application;
 
 public class AuthService
 {
-   
-    private static List<(string username, string password)> usuarios = new();
-
+    private readonly AppDbContext _context;
     private const string CLAVE = "CLAVE_SUPER_LARGA_12345678901234567890";
 
-    // REGISTRO
-    public void Registrar(RegistroDto dto)
+    public AuthService(AppDbContext context)
     {
-        usuarios.Add((dto.Username, dto.Password));
+        _context = context;
     }
 
     // LOGIN
     public string? Login(LoginDto dto)
     {
-        var user = usuarios.FirstOrDefault(u => u.username == dto.Username && u.password == dto.Password);
+        var user = _context.Usuarios
+            .FirstOrDefault(u => u.Email == dto.Username && u.Password == dto.Password);
 
-        if (user.username == null)
+        if (user == null)
             return null;
 
-        return GenerarToken(dto.Username);
+        return GenerarToken(user.Email);
     }
 
-    private string? GenerarToken(object username)
+    // REGISTRO (opcional pero útil)
+    public void Registrar(RegistroDto dto)
     {
-        throw new NotImplementedException();
+        var nuevoUsuario = new Usuario
+        {
+            Nombre = dto.Nombre,
+            Email = dto.Email,
+            Password = dto.Password
+        };
+
+        _context.Usuarios.Add(nuevoUsuario);
+        _context.SaveChanges();
     }
 
     // GENERAR TOKEN
-    private string GenerarToken(string username)
+    private string GenerarToken(string email)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(CLAVE));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new[]
         {
-            new Claim(ClaimTypes.Name, username)
+            new Claim(ClaimTypes.Name, email)
         };
 
         var token = new JwtSecurityToken(

@@ -1,30 +1,41 @@
 ﻿using GestorTareas.Application;
-using GestorTareas_Modulo2.Application;
-using GestorTareas_Modulo2.Infrastructure;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
+using GestorTareas.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+// 🔹 DbContext (Entity Framework)
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=GestorTareasDB;Trusted_Connection=True;"));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("GestorTareas")
+    )
+);
 
+// 🔹 Servicios
+builder.Services.AddScoped<AuthService>();
 
-builder.Services.AddControllers();
+// 🔹 CORS (Angular)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
-
-builder.Services.AddScoped<IRepositorioTareas, RepositorioTareas>();
-builder.Services.AddScoped<GestorTareasService>();
-
+// 🔹 JWT
 var clave = "CLAVE_SUPER_LARGA_12345678901234567890";
 var key = Encoding.UTF8.GetBytes(clave);
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -39,11 +50,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
-
-builder.Services.AddSingleton<AuthService>();
+// 🔹 Controllers
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
+// 🔹 Middleware
+app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -51,3 +64,11 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+internal class JwtBearerDefaults
+{
+    internal static void AuthenticationScheme(AuthenticationOptions options)
+    {
+        throw new NotImplementedException();
+    }
+}

@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "GestorTareas_Modulo2": {
+    "GestorTareas": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

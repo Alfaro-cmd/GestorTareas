@@ -1,5 +1,5 @@
-﻿using GestorTareas_Modulo2.Application;
-using GestorTareas_Modulo2.Domain;
+﻿using GestorTareas.Application;
+using GestorTareas.Domain;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GestorTareas_Modulo2.Controllers;

@@ -1,7 +1,7 @@
-﻿using GestorTareas_Modulo2.Domain;
-using GestorTareas_Modulo2.Infrastructure;
+﻿using GestorTareas.Domain;
+using GestorTareas.Infrastructure;
 
-namespace GestorTareas_Modulo2.Application;
+namespace GestorTareas.Application;
 
 public class GestorTareasService
 {

@@ -1,4 +1,4 @@
-﻿namespace GestorTareas_Modulo2.Application;
+﻿namespace GestorTareas.Application;
 
 public class TareaDto
 {

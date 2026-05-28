@@ -1,4 +1,4 @@
-﻿namespace GestorTareas_Modulo2.Domain;
+﻿using GestorTareas.Domain;
 
 public class Usuario
 {
@@ -6,4 +6,7 @@ public class Usuario
     public string Nombre { get; set; }
 
     public List<Tarea> Tareas { get; set; }
+
+    public string Email { get; set; }
+    public string Password { get; set; }
 }

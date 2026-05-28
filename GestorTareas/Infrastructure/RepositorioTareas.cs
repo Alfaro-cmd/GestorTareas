@@ -1,7 +1,8 @@
-﻿using GestorTareas_Modulo2.Domain;
+﻿using GestorTareas.Domain;
+using GestorTareas.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
-namespace GestorTareas_Modulo2.Infrastructure;
+namespace GestorTareas.Infrastructure;
 
 public class RepositorioTareas : IRepositorioTareas
 {

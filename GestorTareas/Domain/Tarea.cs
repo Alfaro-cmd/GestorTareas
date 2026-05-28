@@ -1,4 +1,4 @@
-﻿namespace GestorTareas_Modulo2.Domain;
+﻿namespace GestorTareas.Domain;
 
 public class Tarea
 {

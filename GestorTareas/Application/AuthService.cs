@@ -1,10 +1,9 @@
-﻿using GestorTareas.Application.DTOs;
+﻿using GestorTareas.Domain;
 using GestorTareas.Infrastructure;
-using GestorTareas.Domain;
-using GestorTareas.Infrastructure;
-using Microsoft.IdentityModel.Tokens;
+using GestorTareas.Application.DTOs;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 namespace GestorTareas.Application;
@@ -23,7 +22,7 @@ public class AuthService
     public string? Login(LoginDto dto)
     {
         var user = _context.Usuarios
-            .FirstOrDefault(u => u.Email == dto.Username && u.Password == dto.Password);
+            .FirstOrDefault(u => u.Email == dto.Email && u.Password == dto.Password);
 
         if (user == null)
             return null;
@@ -31,7 +30,7 @@ public class AuthService
         return GenerarToken(user.Email);
     }
 
-    // REGISTRO (opcional pero útil)
+    // REGISTRO
     public void Registrar(RegistroDto dto)
     {
         var nuevoUsuario = new Usuario

@@ -41,4 +41,13 @@ public class GestorTareasService
     {
         throw new NotImplementedException();
     }
+    public void Actualizar(Tarea tarea)
+    {
+        _repositorio.Actualizar(tarea);
+    }
+
+    public void Eliminar(Tarea tarea)
+    {
+        _repositorio.Eliminar(tarea);
+    }
 }

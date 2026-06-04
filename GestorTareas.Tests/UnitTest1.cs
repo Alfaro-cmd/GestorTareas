@@ -125,4 +125,13 @@ public class GestorTareasServiceTests
 
         Assert.Equal(fecha, tarea.FechaLimite);
     }
+
+
+    [Fact]
+    public void AdminUsuario_DevuelveRolAdministrador()
+    {
+        Usuario usuario = new AdminUsuario();
+
+        Assert.Equal("Administrador", usuario.ObtenerRol());
+    }
 }

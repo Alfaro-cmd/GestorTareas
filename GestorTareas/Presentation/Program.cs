@@ -14,8 +14,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // SERVICES
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<GestorTareasService>();
 
-// CORS (IMPORTANTE)
+// CORS 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -44,6 +45,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // CONTROLLERS
 builder.Services.AddControllers();
 
+builder.Services.AddScoped<IRepositorioTareas, RepositorioTareas>();
+builder.Services.AddScoped<GestorTareasService>();
+builder.Services.AddScoped<AuthService>();
+
 var app = builder.Build();
 
 app.UseCors("AllowAll");
@@ -53,4 +58,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+Console.WriteLine("ANTES DE RUN");
 app.Run();
+Console.WriteLine("DESPUES DE RUN");
